@@ -9,6 +9,7 @@
 
     <div class="accessory-result-page accessory-page">
       <div class="container">
+
         <!-- 排序bar -->
         <div class="filter-nav">
           <span class="sortby">Sort by:</span>
@@ -29,6 +30,7 @@
 
           
         <div class="accessory-result">
+
           <!-- 过滤器bar -->
           <div class="filter stopPop" id="filter" :class="{'filterby-show':filterBy}">
             <dl class="filter-price">
@@ -66,7 +68,7 @@
                     <div class="name">{{item.productName}}</div>
                     <div class="price">{{item.salePrice}}</div>
                     <div class="btn-area">
-                      <a href="javascript:;" class="btn btn--m">加入购物车</a>
+                      <a href="javascript:;" class="btn btn--m" @click="addCart(item.productId)">加入购物车</a>
                     </div>
                   </div>
                 </li>
@@ -195,6 +197,7 @@ export default {
     //价格过滤
     setPriceFilter(index) {
       this.page = 1;
+      this.busy = true;
       this.priceChecked = index;
       this.closeFilePop();
       this.getGoodsList();
@@ -217,10 +220,30 @@ export default {
     //获取所有商品列表信息
     getAllGoodsList() {
       this.page = 1;
-      this.busy = false;
+      this.busy = true;
       this.priceChecked = "all";
       this.getGoodsList();
       this.closeFilePop();
+    },
+    //加入购物车
+    addCart(productId){
+      const url='/goods/addCart'
+      const data={productId:productId}
+      fetch(url,{
+        method:"POST",
+        body:JSON.stringify(data),
+        headers:{
+          'content-type':'application/json'
+        }
+      })
+      .then(res=>res.json())
+      .then(res=>{
+        if(res.status==1){
+          alert("success")
+        }else{
+          alert("fail")
+        }
+      })
     }
   }
 };

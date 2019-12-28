@@ -6,7 +6,9 @@ const productSchema=new Schema({
     productName:String,
     salePrice:Number,
     productImage:String,
-    productUrl:String  
+    productUrl:String,
+    productNum:String,
+    checked:String
 });
 
 

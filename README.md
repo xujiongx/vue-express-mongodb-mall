@@ -23,3 +23,19 @@
 >npm run dev启动服务
 
 >npm run build生成dist线上文件
+
+<br><br>
+## 12.29
+>写添加到购物车的接口
+1. 前端传给后端的数据异常，post请求要添加文件头`content-type`。
+
+```js
+fetch(url,{
+        method:"POST",
+        body:JSON.stringify(data),
+        headers:{
+          'content-type':'application/json'
+        }
+})
+```
+2. 添加到购物车的判断是否拥有同类商品
