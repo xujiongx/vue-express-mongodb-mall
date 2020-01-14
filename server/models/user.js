@@ -8,6 +8,7 @@ const userSchema=new mongoose.Schema({
     cartList:[{
         productId:String,
         productName:String,
+        productImage:String,
         salePrice:String,
         checked:String,
         productNum:String
