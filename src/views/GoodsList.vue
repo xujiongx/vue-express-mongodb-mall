@@ -89,6 +89,24 @@
         </div>
       </div>
     </div>
+    
+    <!-- 模态框 -->
+    <modal v-bind:mdShow="mdShow" v-on:close="closeModal">
+      <div slot="md-title" class="md-title">Add car</div>
+      <p slot="message">请先登录在加入购物车</p>
+      <div slot="btnGroup">
+        <a href="javascript:void(0)" class="btn btn--m" @click="mdShow=false">关闭</a>
+      </div>
+    </modal>
+
+    <modal v-bind:mdShow="mdShowCart" v-on:close="closeModal">
+      <div slot="md-title" class="md-title">Add car</div>
+      <p slot="message">加入购物车成功</p>
+      <div slot="btnGroup">
+        <a href="javascript:void(0)" class="btn btn--m" @click="mdShowCart=false">继续购物</a>
+        <router-link href="javascript:void(0)" class="btn btn--m" to="/cart">查看购物车</router-link>
+      </div>
+    </modal>
 
     <!-- 遮罩层 -->
     <div class="md-overlay" v-show="overLayFlag" @click="closeFilePop"></div>
@@ -103,6 +121,7 @@ import "../assets/css/product.css";
 import NavHeader from "@/components/Header.vue";
 import NavFooter from "@/components/Footer.vue";
 import NavBread from "@/components/Bread.vue";
+import Modal from '@/components/Modal.vue'
 
 export default {
   data() {
@@ -133,19 +152,24 @@ export default {
       //滚动加载
       busy: true,
       //是否加载loading图标
-      loading: true
+      loading: true,
+      //是否显示加入失败模态框
+      mdShow:false,
+      //是否显示加入成功模态框
+      mdShowCart:false,
     };
   },
 
   components: {
     NavHeader,
     NavFooter,
-    NavBread
+    NavBread,
+    Modal
   },
 
   mounted() {
     //获取所有商品列表
-    this.getGoodsList("/goods");
+    this.getGoodsList();
   },
   methods: {
     //获取商品列表
@@ -159,9 +183,9 @@ export default {
         priceLevel: this.priceChecked
       };
       if (params.priceLevel == "all") {
-        url = `/goods?page=${params.page}&pageSize=${params.pageSize}&sort=${params.sort}`;
+        url = `/goods/list?page=${params.page}&pageSize=${params.pageSize}&sort=${params.sort}`;
       } else {
-        url = `/goods?page=${params.page}&pageSize=${params.pageSize}&sort=${
+        url = `/goods/list?page=${params.page}&pageSize=${params.pageSize}&sort=${
           params.sort
         }&priceLevel=${JSON.stringify(this.priceFilter[params.priceLevel])}`;
       }
@@ -178,7 +202,7 @@ export default {
               }
             } else {
               this.goodsList = json.result.list;
-              this.busy = true;
+              this.busy = false;
             }
           } else {
             this.goodsList = [];
@@ -197,7 +221,6 @@ export default {
     //价格过滤
     setPriceFilter(index) {
       this.page = 1;
-      this.busy = true;
       this.priceChecked = index;
       this.closeFilePop();
       this.getGoodsList();
@@ -215,12 +238,11 @@ export default {
       setTimeout(() => {
         this.page++;
         this.getGoodsList(true);
-      }, 1000);
+      }, 100);
     },
     //获取所有商品列表信息
     getAllGoodsList() {
       this.page = 1;
-      this.busy = true;
       this.priceChecked = "all";
       this.getGoodsList();
       this.closeFilePop();
@@ -239,11 +261,17 @@ export default {
       .then(res=>res.json())
       .then(res=>{
         if(res.status==1){
-          alert("success")
+          // alert("加入购物车成功")
+          this.mdShowCart=true;
         }else{
-          alert("fail")
+          this.mdShow=true;
         }
       })
+    },
+    //关闭模态框
+    closeModal(){
+      this.mdShow=false;
+      this.mdShowCart=false;
     }
   }
 };

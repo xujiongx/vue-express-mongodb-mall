@@ -13,7 +13,7 @@ mongoose.connection.on("connected", () => console.log("mongodb connect is succes
 
 
 //查询商品列表数据
-router.get("/", function (req, res, next) {
+router.get("/list", function (req, res, next) {
     let {
         page,
         pageSize,

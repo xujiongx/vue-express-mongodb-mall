@@ -22,7 +22,7 @@
   margin-left: -20px;
 }
 .navbar-brand-logo {
-  /*width: 120px;*/
+  width: 80px;
 }
 .header a, .footer a {
   color: #666;
@@ -33,7 +33,7 @@ a {
   transition: color .3s ease-out;
 }
 .navbar-right-container {
-  display: none;
+  display: flex;
   justify-content: flex-start;
   align-items: center;
 }
@@ -81,13 +81,13 @@ a {
   padding-bottom: 0;
 }
 .regi_form_input .icon {
-  display: inline-block;
+  /* display: inline-block; */
   float: left;
   width: 25px;
   height: 29px;
   margin: 6px 0 0 14px;
   background-position: 4px 5px;
-  background-image: url("/static/icon.png");
+  background-image: url("/static/images/icon.png");
   background-repeat: no-repeat;
 }
 .regi_form_input .IconPwd {
