@@ -13,7 +13,14 @@ const userSchema=new mongoose.Schema({
         checked:String,
         productNum:String
     }],
-    addressList:Array
+    addressList:[{
+        addressId:String,
+        userName:String,
+        streeName:String,
+        postCode:String,
+        tel:String,
+        isDefault:Boolean
+    }]
 
 })
 

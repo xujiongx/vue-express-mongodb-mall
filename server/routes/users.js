@@ -233,4 +233,107 @@ router.post('/cart/changeNum',(req,res,next)=>{
   })
 })
 
+//查询用户地址接口
+router.get('/address/list',(req,res,next)=>{
+  let userId=req.cookies.userId;
+  User.findOne({userId:userId},(err,doc)=>{
+    if(err){
+      res.json({
+        status: 0,
+        message: err.message,
+        result: ''
+      })
+    }else{
+      if(doc){
+        res.json({
+          status: 1,
+          message: '',
+          result: doc.addressList
+        })
+      }
+    }
+  })
+})
+
+//设置默认地址
+router.post('/address/setDefault',(req,res,next)=>{
+  let userId=req.cookies.userId,
+  addressId=req.body.addressId;
+  User.findOne({userId:userId},(err,doc)=>{
+    if(err){
+      res.json({
+        status: 0,
+        message: err.message,
+        result: ''
+      })
+    }else{
+      doc.addressList.forEach(item=>{
+        if(item.addressId==addressId){
+          item.isDefault=true;
+        }else{
+          item.isDefault=false;
+        }
+      })
+      doc.save((err1,doc1)=>{
+        if(err1){
+          res.json({
+            status: 0,
+            message: err.message,
+            result: ''
+          })
+        }else{
+          if (doc1) {
+            res.json({
+              status: 1,
+              message: '',
+              result: '设置默认地址成功'
+            })
+          }
+        }
+      })
+    }
+  })
+})
+
+//删除地址
+router.post("/address/del",(req,res,next)=>{
+  let userId=req.cookies.userId,
+  addressId=req.body.addressId;
+  User.update({
+    userId: userId
+  }, {
+    $pull: {
+      'addressList': {
+        'addressId': addressId
+      }
+    }
+  },(err,doc)=>{
+    if(err){
+      res.json({
+        status: 0,
+        message: err.message,
+        result: ''
+      })
+    }else{
+      if (doc) {
+        res.json({
+          status: 1,
+          message: '',
+          result: '删除地址成功'
+        })
+      }
+    }
+  })
+})
+
+//添加地址
+router.post('/address/add',(req,res,next)=>{
+  // let  "addressId": "100001",
+  // "userName": "JackBean",
+  // "streetName": "北京市朝阳区朝阳公园",
+  // "postCode": "100001",
+  // "tel": "12345678901",
+  // "isDefault": false
+})
+
 module.exports = router;

@@ -76,7 +76,7 @@ a {
   background: none;
   margin-bottom: 15px;
   font-size: 14px;
-  overflow: hidden;
+  /* overflow: hidden; */
   border:1px solid #ccc;
   padding-bottom: 0;
 }
@@ -98,7 +98,7 @@ a {
   left:45px;
   top:0;
   padding: 9px 0 10px;
-  width: 270px;
+  /* width: 270px; */
   font-size: 14px;
   zoom: 1;
   border: none;
