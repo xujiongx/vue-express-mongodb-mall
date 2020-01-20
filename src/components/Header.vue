@@ -133,7 +133,6 @@ export default {
         if(res.status=="1"){
           this.errTip=false;
           this.loginModel=false;
-          alert(res.result.userName+"登陆成功");
           this.nickName=res.result.userName;
         }else{
           this.errTip=true;
@@ -145,7 +144,6 @@ export default {
       axios.post('/users/logout').then(response=>{
         let res=response.data;
         if(res.status='1'){
-          alert("登出成功")
           this.nickName=""
         }
       })

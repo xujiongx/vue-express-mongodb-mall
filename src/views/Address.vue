@@ -1,7 +1,9 @@
 <template>
   <div>
     <nav-header></nav-header>
-    <nav-bread></nav-bread>
+    <nav-bread>
+      <span>Address</span>
+    </nav-bread>
     <div class="checkout-page">
       <svg
         style="position: absolute; width: 0; height: 0; overflow: hidden;"
@@ -108,7 +110,12 @@
           <div class="addr-list-wrap">
             <div class="addr-list">
               <ul>
-                <li v-for="(item,i) in addressListFilter" :key="i" :class="{'check':checkIndex==i}" @click="checkIndex=i;seletedAddrId=item.addressId">
+                <li
+                  v-for="(item,i) in addressListFilter"
+                  :key="i"
+                  :class="{'check':checkIndex==i}"
+                  @click="checkIndex=i;seletedAddrId=item.addressId"
+                >
                   <dl>
                     <dt>{{item.userName}}</dt>
                     <dd class="address">{{item.streetName}}</dd>
@@ -116,7 +123,11 @@
                   </dl>
                   <!-- 删除 -->
                   <div class="addr-opration addr-del">
-                    <a href="javascript:;" class="addr-del-btn" @click="delAddressFirm(item.addressId)">
+                    <a
+                      href="javascript:;"
+                      class="addr-del-btn"
+                      @click="delAddressFirm(item.addressId)"
+                    >
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del" />
                       </svg>
@@ -124,13 +135,18 @@
                   </div>
                   <!-- 设为默认 -->
                   <div class="addr-opration addr-set-default">
-                    <a href="javascript:;" class="addr-set-default-btn" v-if="!item.isDefault" @click="setDefault(item.addressId)">
+                    <a
+                      href="javascript:;"
+                      class="addr-set-default-btn"
+                      v-if="!item.isDefault"
+                      @click="setDefault(item.addressId)"
+                    >
                       <i>Set default</i>
                     </a>
                   </div>
                   <div class="addr-opration addr-default" v-if="item.isDefault">默认地址</div>
                 </li>
-                
+
                 <li class="addr-new">
                   <div class="add-new-inner">
                     <i class="icon-add">
@@ -145,7 +161,12 @@
             </div>
 
             <div class="shipping-addr-more">
-              <a class="addr-more-btn up-down-btn" href="javascript:;" @click="expend" :class="{'open':limite>3}">
+              <a
+                class="addr-more-btn up-down-btn"
+                href="javascript:;"
+                @click="expend"
+                :class="{'open':limite>3}"
+              >
                 more
                 <i class="i-up-down">
                   <i class="i-up-down-l"></i>
@@ -175,13 +196,16 @@
             </div>
           </div>
           <div class="next-btn-wrap">
-            <router-link class="btn btn--m btn--red" :to="{path:'orderConfirm',query:{'seletedAddrId':seletedAddrId}}">Next</router-link>
+            <router-link
+              class="btn btn--m btn--red"
+              :to="{path:'orderConfirm',query:{'seletedAddrId':seletedAddrId}}"
+            >Next</router-link>
           </div>
         </div>
       </div>
     </div>
     <!-- 确认删除模态框 -->
-        <modal v-bind:mdShow="mdShow" v-on:close="closeModal">
+    <modal v-bind:mdShow="mdShow" v-on:close="closeModal">
       <p slot="message">确认删除该地址吗？</p>
       <div slot="btnGroup">
         <a href="javascript:void(0)" class="btn btn--m" @click="delAddress">确认</a>
@@ -198,79 +222,87 @@ import NavHeader from "@/components/Header.vue";
 import NavFooter from "@/components/Footer.vue";
 import NavBread from "@/components/Bread.vue";
 import Modal from "@/components/Modal.vue";
-import axios from 'axios'
+import axios from "axios";
 export default {
   data() {
     return {
-        // 地址列表
-      addressList:[],
+      // 地址列表
+      addressList: [],
       //显示的地址数量
-      limite:3,
+      limite: 3,
       //被选中的是那个
-      checkIndex:0,
+      checkIndex: 0,
       //是否显示删除弹窗
-      mdShow:false,
+      mdShow: false,
       //被选中地址Id
-      addressId:'',
-      //被选中商品ID
-      seletedAddrId:''
+      addressId: "",
 
+      seletedAddrId: ""
     };
   },
-  mounted(){
-      this.getAddressList();
+  mounted() {
+    this.getAddressList();
   },
   //计算属性
-  computed:{
-      addressListFilter(){
-          return this.addressList.slice(0,this.limite);
-      },
-
+  computed: {
+    //地址过滤器
+    addressListFilter() {
+      return this.addressList.slice(0, this.limite);
+    }
   },
   methods: {
-      //获得地址列表
-      getAddressList(){
-          axios.get('/users/address/list').then(response=>{
-              this.addressList=response.data.result;
-          })
-      },
-      //加载更多
-      expend(){
-          if(this.limite==3){
-              this.limite=this.addressList.length;
-          }else{
-              this.limite=3;
+    //获得地址列表
+    getAddressList() {
+      axios.get("/users/address/list").then(response => {
+        this.addressList = response.data.result;
+        //默认选中的地址为默认地址
+        this.addressList.forEach((item,i) => {
+          if (item.isDefault == "1") {
+            this.seletedAddrId = item.addressId;
+            this.checkIndex=i;
           }
-      },
-      //设置默认地址
-      setDefault(addressId){
-          axios.post('/users/address/setDefault',{
-              addressId:addressId
-          }).then((response)=>{
-              console.log(response.data.result),
-              this.getAddressList()
-          })
-
-      },
-      //
-      closeModal(){
-          this.mdShow=false;
-      },
-    //   点击删除按钮
-      delAddressFirm(addressId){
-          this.mdShow=true;
-          this.addressId=addressId;
-      },
-      //确认后发送删除指令
-      delAddress(){
-          this.closeModal()
-          axios.post('/users/address/del',{
-              addressId:this.addressId
-          }).then(res=>{
-              console.log(res.data.result);
-              this.getAddressList()
-          })
+        });
+      });
+    },
+    //加载更多
+    expend() {
+      if (this.limite == 3) {
+        this.limite = this.addressList.length;
+      } else {
+        this.limite = 3;
       }
+    },
+    //设置默认地址
+    setDefault(addressId) {
+      axios
+        .post("/users/address/setDefault", {
+          addressId: addressId
+        })
+        .then(response => {
+          console.log(response.data.result), this.getAddressList();
+        });
+    },
+    //
+    closeModal() {
+      this.mdShow = false;
+    },
+    //   点击删除按钮
+    delAddressFirm(addressId) {
+      this.mdShow = true;
+      this.addressId = addressId;
+    },
+    //确认后发送删除指令
+    delAddress() {
+      this.closeModal();
+      axios
+        .post("/users/address/del", {
+          addressId: this.addressId
+        })
+        .then(res => {
+          console.log(res.data.result);
+          this.getAddressList();
+        });
+    },
   },
   components: {
     NavHeader,

@@ -3,6 +3,9 @@ import Router from 'vue-router'
 import GoodsList from '@/views/GoodsList'
 import Cart from '@/views/Cart'
 import Address from '@/views/Address'
+import OrderConfirm from '@/views/OrderConfirm'
+import OrderSuccess from '@/views/OrderSuccess'
+
 
 
 
@@ -16,6 +19,11 @@ export default new Router({
       component: GoodsList
     },
     {
+      path: '/goods',
+      name: 'GoodsList',
+      component: GoodsList
+    },
+    {
       path: '/cart',
       name: 'Cart',
       component: Cart
@@ -24,6 +32,16 @@ export default new Router({
       path: '/address',
       name: 'Address',
       component: Address
+    },
+    {
+      path: '/orderConfirm',
+      name: 'OrderConfirm',
+      component: OrderConfirm
+    },
+    {
+      path: '/orderSuccess',
+      name: 'OrderSuccess',
+      component: OrderSuccess
     }
   ]
 })

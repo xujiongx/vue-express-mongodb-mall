@@ -3,7 +3,9 @@
     <!-- 头部 -->
     <nav-header></nav-header>
     <!-- 面包屑 -->
-    <nav-bread></nav-bread>
+    <nav-bread>
+      <span>Cart</span>
+    </nav-bread>
     <!-- 删除的svg图像 -->
     <svg
       style="position: absolute; width: 0; height: 0; overflow: hidden;"
@@ -292,7 +294,7 @@ export default {
         .then(response => {
           let res = response.data;
           if (res.status == "1") {
-            console.log("update suc");
+            console.log("update suc");console
           }
         });
     },
@@ -320,7 +322,6 @@ export default {
       }else{
         item.checked=item.checked=='1'?'0':'1';
       }
-      console.log(item)
       axios.post("/users/cart/changeNUm", {
         productId: item.productId,
         productNum: item.productNum,
