@@ -262,6 +262,7 @@ export default {
       .then(res=>{
         if(res.status==1){
           // alert("加入购物车成功")
+        this.$store.commit('updateCartCount',1)
           this.mdShowCart=true;
         }else{
           this.mdShow=true;

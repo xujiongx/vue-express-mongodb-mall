@@ -143,7 +143,7 @@
                     <a
                       href="javascript:void(0)"
                       class="item-edit-btn"
-                      @click="delCartConfirm(item.productId)"
+                      @click="delCartConfirm(item)"
                     >
                       <svg class="icon icon-del">
                         <use xlink:href="#icon-del" />
@@ -179,7 +179,11 @@
                 <span class="total-price">{{totalPrice|currency('$')}}</span>
               </div>
               <div class="btn-wrap">
-                <a class="btn btn--red" :class="{'btn--dis':checkedCount==0}" @click="checkOut">Checkout</a>
+                <a
+                  class="btn btn--red"
+                  :class="{'btn--dis':checkedCount==0}"
+                  @click="checkOut"
+                >Checkout</a>
               </div>
             </div>
           </div>
@@ -207,7 +211,7 @@ import NavBread from "@/components/Bread.vue";
 import Modal from "@/components/Modal.vue";
 import "@/assets/css/checkout.css";
 import axios from "axios";
-import {currency} from '@/utils/currency.js'
+import { currency } from "@/utils/currency.js";
 
 export default {
   data() {
@@ -219,11 +223,12 @@ export default {
       //发送删除指令的商品id
       productId: "",
       //删除成功后发送回来的消息
-      delMessage: {}
+      delMessage: {},
+      delNum:''
     };
   },
-  filters:{
-    currency:currency
+  filters: {
+    currency: currency
   },
   mounted() {
     this.getCartList();
@@ -265,7 +270,8 @@ export default {
     //点击删除事件
     delCartConfirm(i) {
       this.mdShow = true;
-      this.productId = i;
+      this.productId = i.productId;
+      this.delNum=i.productNum;
     },
     //发送删除指令
     delCart() {
@@ -275,9 +281,11 @@ export default {
         })
         .then(response => {
           let res = response.data;
+          console.log(res)
           if (res.status == "1") {
             this.closeModal();
             this.getCartList();
+            this.$store.commit('updateCartCount',-this.delNum);
           }
         });
     },
@@ -294,7 +302,8 @@ export default {
         .then(response => {
           let res = response.data;
           if (res.status == "1") {
-            console.log("update suc");console
+            console.log("update suc");
+            console;
           }
         });
     },
@@ -316,25 +325,27 @@ export default {
     changeNum(flag, item) {
       if (flag == "+") {
         item.productNum++;
-      } else if(flag=='-'){
+        this.$store.commit('updateCartCount',1)
+      } else if (flag == "-") {
         if (item.productNum <= 1) return;
         item.productNum--;
-      }else{
-        item.checked=item.checked=='1'?'0':'1';
+        this.$store.commit('updateCartCount',-1)
+      } else {
+        item.checked = item.checked == "1" ? "0" : "1";
       }
       axios.post("/users/cart/changeNUm", {
         productId: item.productId,
         productNum: item.productNum,
-        checked:item.checked
+        checked: item.checked
       });
     },
-  //checkout按钮事件
-    checkOut(){
-      if(this.checkedCount>0)
-      this.$router.push({
-        path:'/address'
-      })
-    }
+    //checkout按钮事件
+    checkOut() {
+      if (this.checkedCount > 0)
+        this.$router.push({
+          path: "/address"
+        });
+    },
   },
   components: {
     NavHeader,

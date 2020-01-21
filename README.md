@@ -87,3 +87,6 @@ fetch(url,{
 3. Mutations 更改Vuex的store的状态的唯一方法是mutation
 4. Actions提交的是mutation,而不是自接变更状态  可以任意包含任意异步操作
 5. Modules Vuex的store对象分割成模块
+
+## 1.21
+>使用vuex对登录和购物车进行改造

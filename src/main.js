@@ -6,9 +6,12 @@ import router from './router'
 //懒加载
 import VueLazyload from 'vue-lazyload'
 //滚动加载插件
+import Vuex from 'vuex'
 import infiniteScroll from 'vue-infinite-scroll'
-Vue.use(infiniteScroll)
 
+
+Vue.use(infiniteScroll)
+Vue.use(Vuex)
 Vue.config.productionTip = false;
 Vue.use(VueLazyload, {
   // preLoad: 1.3,
@@ -17,10 +20,30 @@ Vue.use(VueLazyload, {
   // attempt: 1
 })
 
+// vuex
+const store=new Vuex.Store({
+  state:{
+    nickName:'',
+    cartCount:0
+  },
+  mutations:{
+    updateUserInfo(state,nickName){
+      state.nickName=nickName;
+    },
+    updateCartCount(state,cartCount){
+      state.cartCount+=cartCount;
+    },
+    initCartCount(state,cartCount){
+      state.cartCount=cartCount;
+    }
+  }
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
   router,
+  store,
   components: { App },
   template: '<App/>'
 })

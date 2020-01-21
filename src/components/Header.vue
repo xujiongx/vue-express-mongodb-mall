@@ -59,7 +59,7 @@
           <a href="javascript:void(0)" class="navbar-link" @click="loginModel=true" v-show="!nickName">Login</a>
           <a href="javascript:void(0)" class="navbar-link" v-show="nickName" @click="logout">Logout</a>
           <div class="navbar-cart-container">
-            <span class="navbar-cart-count"></span>
+            <span class="navbar-cart-count">{{cartCount}}</span>
             <a class="navbar-link navbar-cart-link" href="/#/cart">
               <svg class="navbar-cart-logo">
                 <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-cart" />
@@ -111,12 +111,20 @@ export default {
       userPwd:'',
       errTip:false,
       loginModel:false,
-      nickName:''
     }
   },
   //初始化生命周期
   mounted(){
     this.checkLogin();
+  },
+  //计算属性
+  computed:{
+    nickName(){
+      return this.$store.state.nickName;
+    },
+    cartCount(){
+      return this.$store.state.cartCount;
+    }
   },
   methods:{
     //登录
@@ -133,18 +141,23 @@ export default {
         if(res.status=="1"){
           this.errTip=false;
           this.loginModel=false;
-          this.nickName=res.result.userName;
+          // this.nickName=res.result.userName;
+          this.$store.commit('updateUserInfo',res.result.userName)
+           this.getCartCount();
         }else{
           this.errTip=true;
         }
       })
+     
     },
     //登出
     logout(){
       axios.post('/users/logout').then(response=>{
         let res=response.data;
         if(res.status='1'){
-          this.nickName=""
+          // this.nickName=""
+          this.$store.commit('updateUserInfo','')
+          this.$store.commit('initCartCount',0)
         }
       })
     },
@@ -153,8 +166,16 @@ export default {
     axios.get('/users/checkLogin').then(response=>{
       let res=response.data;
       if(res.status==1){
-        this.nickName=res.result
+        // this.nickName=res.result
+        this.getCartCount();
       }
+    })
+  },
+  //获得购物车数量
+  getCartCount(){
+    axios.get('/users/cart/count').then(res=>{
+      this.$store.commit('initCartCount',res.data.result)
+      console.log(this.cartCount)
     })
   }
   },
