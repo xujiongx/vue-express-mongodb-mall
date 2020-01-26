@@ -167,6 +167,7 @@ export default {
       let res=response.data;
       if(res.status==1){
         // this.nickName=res.result
+          this.$store.commit('updateUserInfo',res.result)
         this.getCartCount();
       }
     })

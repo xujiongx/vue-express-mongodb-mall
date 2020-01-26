@@ -12,8 +12,8 @@
               </select>
             </div>
             <div class="footer__secondary__nav">
-              <span>Copyright © 2017 IMooc All Rights Reserved.</span>
-              <a href="#">About Us</a>
+              <span>Copyright © 2020 XuJiong All Rights Reserved.</span>
+              <a href="https://jxnydx.club">About Us</a>
               <a href="#">Terms &amp; Conditions</a>
               <a href="#">Privacy Policy</a>
             </div>
